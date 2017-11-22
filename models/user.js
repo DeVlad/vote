@@ -22,11 +22,11 @@ var UserSchema = new Schema({
         required: [true, 'Email address is required'],
         unique: [true, 'Email address must be unique']
     },
-    password: {                            
+    password: {
         type: String,
         max: [72, 'Encrypted password is limited to 72 characters'],
-        required: [true, 'Pasword is required']             
-    },                            
+        required: [true, 'Pasword is required']
+    },
 
 }, {
     versionKey: false
@@ -35,4 +35,5 @@ var UserSchema = new Schema({
 UserSchema.plugin(AutoIncrement, {
     inc_field: 'id'
 });
+
 module.exports = mongoose.model('User', UserSchema);

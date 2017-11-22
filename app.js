@@ -1,16 +1,16 @@
-// TODO: check if shortened url is longer then original
 var express = require('express'),
     app = express(),
     port = process.env.PORT || 8000;
 
-// Handle static files
-// TIP: Handle static files before routes
-app.use(express.static(__dirname + '/public'));
-
-// Initialize routes
-app.use('/', require('./routes/routes'));
-
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var exphbs = require('express-handlebars');
+var flash = require('connect-flash');
 var mongoose = require('mongoose');
+
+// Database
 var uri = 'mongodb://localhost/vote';
 var options = {
     useMongoClient: true,   
@@ -21,6 +21,45 @@ mongoose.connect(uri, options, function(error) {
         console.log('Database connection established');        
     }
 });
+
+
+require('./config/passport')(passport);
+
+// Read cookies
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
+// View engine
+app.engine('.hbs', exphbs({
+    extname: '.hbs',
+    defaultLayout: 'layout'
+}));
+app.set('view engine', '.hbs');
+
+// Required for passport
+app.use(session({
+    secret: 'ItsVerySecret.ChangeAndStoreItInEnvVariableInProduction!',
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+
+// Persistent login sessions
+app.use(passport.session());
+
+// Flash messages stored in session
+app.use(flash());
+
+// Handle static files
+app.use(express.static(__dirname + '/public'));
+
+// Routes
+require('./routes/routes.js')(app, passport);
 
 // Error handler
 app.use(function (err, req, res, next) {

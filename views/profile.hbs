@@ -1,0 +1,15 @@
+<nav>
+    <div class="navbar navbar-toggleable-md navbar-light">
+        <ul id="navbar-nav">
+            <li class="nav-item"><a href="/">Home</a></li>
+            <li class="nav-item"><a href="/profile">Profile</a></li>
+            <li class="nav-item"><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<h2>Wellcome to your profile {{user.firstName}}</h2>
+
+{{#if message}}
+<div class="alert">{{message}}</div>
+{{/if}}
