@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var User = require('../models/user');
+var Poll = require('../models/poll');
 
 module.exports = function (app, passport) {
 
