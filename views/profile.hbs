@@ -10,6 +10,33 @@
 
 <h2>Wellcome to your profile {{user.firstName}}</h2>
 
+<div class="row">
+    <h1>Create poll</h1>
+    <form action="/profile/poll" method="post">
+        <div class="row">
+            <div class="form-group col col-sm-12 col-md-4">
+                <input type="text" name="question" id="question" value="Question" class="form-control" required aria-required="true">
+                <label for="question">Question</label>
+            </div>
+
+            <div class="form-group col col-sm-12 col-md-4">
+                <input type="text" name="option1" class="option form-control" value="Option 1" required aria-required="true">
+                <label for="option1">Option 1</label>
+            </div>
+            
+            <div class="form-group col col-sm-12 col-md-4">
+                <input type="text" name="option2" class="option form-control" value="Option 2" required aria-required="true">
+                <label for="option2">Option 2</label>
+            </div>            
+            
+        </div>
+        
+        <input type="submit" id="login-btn" class="btn btn-success".btn-success onclick="" value="Submit Poll">
+    </form>
+</div>
+
+
+
 {{#if message}}
 <div class="alert">{{message}}</div>
 {{/if}}

@@ -9,15 +9,14 @@ var PollSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'UserSchema'
     },
-    poll: {
-        type: String,
+    poll: {        
         question: String,
-        options: [{ String: Number }, { String: Number }]
+        options: []
     },
     voter_id: [Number]
 
 }, {
-    timestamps: true,
+    //timestamps: true,
     versionKey: false
 });
 

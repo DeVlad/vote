@@ -28,7 +28,7 @@ module.exports = function (app, passport) {
 
     app.post('/login', passport.authenticate('local-login', {
             failureRedirect: '/login',
-            successRedirect: '/profile',            
+            successRedirect: '/profile',
             failureFlash: true // Allow flash messages
         }),
         function (req, res) {
@@ -49,7 +49,7 @@ module.exports = function (app, passport) {
     app.post(
         '/signup',
         // Form filter and validation        
-        form(            
+        form(
             field("firstName").trim().required().is(/^[A-z]+$/),
             field("lastName").trim().required().is(/^[A-z]+$/),
             field("password").trim().required().len(8, 72, "Password must be between 8 and 72 characters"),
@@ -77,19 +77,57 @@ module.exports = function (app, passport) {
             }
         }
     );
-    
+
     app.get('/error', function (req, res) {
         res.render('error', {
             message: req.flash('errorMessage')
         });
     });
 
-    app.get('/profile', isLoggedIn, function (req, res) {        
+    app.get('/profile', isLoggedIn, function (req, res) {
         res.render('profile', {
             user: req.user // get the user out of session and pass to template
         });
-    });    
-    
+    });
+
+    app.post('/profile/poll', isLoggedIn,
+        form(
+            field("question").trim().required(),
+            field("option1").trim().required(),
+            field("option2").trim().required()
+        ),
+
+        function (req, res) {
+            //console.log("POST Poll");
+            if (!req.form.isValid) {
+                // Handle errors 
+                console.log(req.form.errors);
+                return res.redirect('/profile/poll');
+            }
+            
+            var option1 = req.body.option1;
+            var option2 = req.body.option2;
+            var pollOptions = {};
+            pollOptions[option1] = 0;
+            pollOptions[option2] = 0;
+            
+            var newPoll = new Poll({                
+                poll: {
+                    question: req.body.question,
+                    options: [pollOptions]
+                }                
+            });           
+            
+            newPoll.save(function (err, rows) {
+                console.log("save new poll");
+                if (err) throw err;
+            });
+            res.render('profile', {
+                user: req.user
+            });
+        }
+    );
+
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
