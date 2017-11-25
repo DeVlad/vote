@@ -42,17 +42,17 @@ module.exports = function (passport) {
                 } else {
                     // no user with that email               
                     // create the user
-                    var newUser = new User({
+                   /* var newUser = new User({
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
                         email: email,
                         password: bcrypt.hashSync(password, null, null)                       
-                    });
-
-                    //newUser.firstName = req.body.firstName;
-                    //newUser.lastName = req.body.lastName;
-                   // newUser.email = email;
-                   // newUser.password = bcrypt.hashSync(password, null, null);
+                    });*/
+                     newUser = new User();
+                     newUser.firstName = req.body.firstName;
+                     newUser.lastName = req.body.lastName;
+                     newUser.email = email;
+                     newUser.password = bcrypt.hashSync(password, null, null);
 
                     //console.log(newUser);
 

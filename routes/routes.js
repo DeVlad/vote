@@ -98,7 +98,9 @@ module.exports = function (app, passport) {
         ),
 
         function (req, res) {
-            //console.log("POST Poll");
+            //console.log("POST Poll: user id", req.user);
+        
+            // TODO: verift options must be unique 
             if (!req.form.isValid) {
                 // Handle errors 
                 console.log(req.form.errors);
@@ -109,9 +111,10 @@ module.exports = function (app, passport) {
             var option2 = req.body.option2;
             var pollOptions = {};
             pollOptions[option1] = 0;
-            pollOptions[option2] = 0;
+            pollOptions[option2] = 0;            
             
-            var newPoll = new Poll({                
+            var newPoll = new Poll({
+                owner_id: req.user.id,
                 poll: {
                     question: req.body.question,
                     options: [pollOptions]

@@ -4,11 +4,8 @@ var Schema = mongoose.Schema;
 // Mongoose promises are depricated use global
 mongoose.Promise = global.Promise;
 
-var PollSchema = new Schema({
-    owner: {
-        type: Schema.ObjectId,
-        ref: 'UserSchema'
-    },
+var PollSchema = new Schema({   
+    owner_id: Number,
     poll: {        
         question: String,
         options: []
