@@ -90,6 +90,18 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/profile/poll', isLoggedIn, function (req, res) {
+
+        Poll.find({}, 'poll.question', function (err, polls) {
+            if (err) throw err;
+            console.log(polls);
+
+        });
+        res.render('poll', {
+            user: req.user // get the user out of session and pass to template
+        });
+    });
+
     app.post('/profile/poll', isLoggedIn,
         form(
             field("question").trim().required(),
@@ -99,29 +111,29 @@ module.exports = function (app, passport) {
 
         function (req, res) {
             //console.log("POST Poll: user id", req.user);
-        
+
             // TODO: verift options must be unique 
             if (!req.form.isValid) {
                 // Handle errors 
                 console.log(req.form.errors);
                 return res.redirect('/profile/poll');
             }
-            
+
             var option1 = req.body.option1;
             var option2 = req.body.option2;
             var pollOptions = {};
             pollOptions[option1] = 0;
-            pollOptions[option2] = 0;            
-            
+            pollOptions[option2] = 0;
+
             var newPoll = new Poll({
                 owner_id: req.user.id,
                 poll: {
                     question: req.body.question,
                     options: [pollOptions]
-                }                
-            });           
-            
-            newPoll.save(function (err, rows) {
+                }
+            });
+
+            newPoll.save(function (err, poll) {
                 console.log("save new poll");
                 if (err) throw err;
             });
