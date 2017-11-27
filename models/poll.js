@@ -5,13 +5,10 @@ var Schema = mongoose.Schema;
 mongoose.Promise = global.Promise;
 
 var PollSchema = new Schema({   
-    owner_id: Number,
-    poll: {        
-        question: String,
-        options: []
-    },
+    owner_id: Number,         
+    question: String,
+    options: [],    
     voter_id: [Number]
-
 }, {
     //timestamps: true,
     versionKey: false

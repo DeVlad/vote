@@ -91,15 +91,16 @@ module.exports = function (app, passport) {
     });
 
     app.get('/profile/poll', isLoggedIn, function (req, res) {
-
-        Poll.find({}, 'poll.question', function (err, polls) {
+        // Find all documents, hide _id, sort by latest poll
+        Poll.find({}, {'_id': 0, voter_id: 0}, {sort: {'_id': -1}}, function (err, polls) {
             if (err) throw err;
-            console.log(polls);
+            //console.log(polls);
+            return res.json(polls);
 
         });
-        res.render('poll', {
+       /* res.render('poll', {
             user: req.user // get the user out of session and pass to template
-        });
+        });*/
     });
 
     app.post('/profile/poll', isLoggedIn,
@@ -112,7 +113,7 @@ module.exports = function (app, passport) {
         function (req, res) {
             //console.log("POST Poll: user id", req.user);
 
-            // TODO: verift options must be unique 
+            // TODO: verify options must be unique 
             if (!req.form.isValid) {
                 // Handle errors 
                 console.log(req.form.errors);
@@ -126,13 +127,11 @@ module.exports = function (app, passport) {
             pollOptions[option2] = 0;
 
             var newPoll = new Poll({
-                owner_id: req.user.id,
-                poll: {
-                    question: req.body.question,
-                    options: [pollOptions]
-                }
+                owner_id: req.user.id,           
+                question: req.body.question,
+                options: [pollOptions]            
             });
-
+            console.log(newPoll)
             newPoll.save(function (err, poll) {
                 console.log("save new poll");
                 if (err) throw err;
