@@ -90,17 +90,22 @@ module.exports = function (app, passport) {
         });
     });
 
-    app.get('/profile/poll', isLoggedIn, function (req, res) {
-        // Find all documents, hide _id, sort by latest poll
-        Poll.find({}, {'_id': 0, voter_id: 0}, {sort: {'_id': -1}}, function (err, polls) {
+    app.get('/profile/:poll', isLoggedIn, function (req, res) {        
+        // If poll param json is set to 1 (poll?json=1) return JSON response 
+        if(req.query.json == 1) {            
+            // Find all documents, hide _id, pid, voter_id, sort by latest poll
+            Poll.find({}, {'_id': 0, 'pid': 0, voter_id: 0}, {sort: {'_id': -1}}, function (err, polls) {
             if (err) throw err;
             //console.log(polls);
             return res.json(polls);
-
         });
-       /* res.render('poll', {
-            user: req.user // get the user out of session and pass to template
-        });*/
+            
+        } else {
+            res.render('poll', {
+            user: req.user
+            });
+        }
+       
     });
 
     app.post('/profile/poll', isLoggedIn,
