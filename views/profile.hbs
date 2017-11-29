@@ -4,7 +4,7 @@
             <li class="nav-item"><a href="/">Home</a></li>
             <li class="nav-item"><a href="/profile">Profile</a></li>
             <li class="nav-item"><a href="/logout">Logout</a></li>
-            <li class="nav-item"><a href="/profile/poll">Polls</a></li>
+            <li class="nav-item"><a href="/profile/poll">My Polls</a></li>
         </ul>
     </div>
 </nav>
@@ -19,20 +19,23 @@
                 <input type="text" name="question" id="question" value="Question" class="form-control" required aria-required="true">
                 <label for="question">Question</label>
             </div>
-
-            <div class="form-group col col-sm-12 col-md-4">
-                <input type="text" name="option1" class="option form-control" value="Option 1" required aria-required="true">
-                <label for="option1">Option 1</label>
-            </div>
-            
-            <div class="form-group col col-sm-12 col-md-4">
-                <input type="text" name="option2" class="option form-control" value="Option 2" required aria-required="true">
-                <label for="option2">Option 2</label>
-            </div>            
-            
         </div>
-        
-        <input type="submit" id="login-btn" class="btn btn-success".btn-success onclick="" value="Submit Poll">
+        <div class="row">
+        <div class="form-group col col-sm-12 col-md-4">
+            <input type="text" name="option1" class="option form-control" value="Option 1" required aria-required="true">
+            <label for="option1">Option 1</label>
+        </div>
+        </div>
+        <div class="row">
+        <div class="form-group col col-sm-12 col-md-4">
+            <input type="text" name="option2" class="option form-control" value="Option 2" required aria-required="true">
+            <label for="option2">Option 2</label>
+        </div>
+        </div>
+        <button class="btn" onclick="alert('add')">Add options</button>
+
+
+        <input type="submit" id="login-btn" class="btn btn-success" .btn-success onclick="" value="Submit Poll">
     </form>
 </div>
 

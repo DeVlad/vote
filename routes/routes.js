@@ -114,7 +114,8 @@ module.exports = function (app, passport) {
             field("option1").trim().required(),
             field("option2").trim().required()
         ),
-
+        // TODO: dynamic input verification
+             
         function (req, res) {
             //console.log("POST Poll: user id", req.user);
 
@@ -124,7 +125,7 @@ module.exports = function (app, passport) {
                 console.log(req.form.errors);
                 return res.redirect('/profile/poll');
             }
-
+            console.log("Req BODY: ", req.body);
             var option1 = req.body.option1;
             var option2 = req.body.option2;
             var pollOptions = {};
@@ -146,6 +147,26 @@ module.exports = function (app, passport) {
             });
         }
     );
+    
+    // Public polls
+    app.get('/:polls', function (req, res) {
+        // If poll param json is set to 1 (poll?json=1) return JSON response 
+        if(req.query.json == 1) {            
+            // Find all documents, hide _id, pid, voter_id, sort by latest poll
+            Poll.find({}, {'_id': 0, 'pid': 0, voter_id: 0}, {sort: {'_id': -1}}, function (err, polls) {
+            if (err) throw err;
+            //console.log(polls);
+            return res.json(polls);
+        });
+            
+        } else {
+            res.render('polls', {
+            user: req.user
+            });
+        }
+    });
+    
+    
 
     app.get('/logout', function (req, res) {
         req.logout();
