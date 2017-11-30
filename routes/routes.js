@@ -149,7 +149,7 @@ module.exports = function (app, passport) {
     );
     
     // Public polls
-    app.get('/:polls', function (req, res) {
+    app.get('/polls', function (req, res) {
         // If poll param json is set to 1 (poll?json=1) return JSON response 
         if(req.query.json == 1) {            
             // Find all documents, hide _id, pid, voter_id, sort by latest poll
@@ -164,10 +164,48 @@ module.exports = function (app, passport) {
             user: req.user
             });
         }
+    });    
+    
+    
+    // API routes
+    
+    app.get('/api', function (req, res) {
+        res.render('api', {
+            message: req.flash('message')
+        });
     });
     
+    app.get('/api/poll', function (req, res) {
+        // Find all documents, hide _id, pid, owner_id, voter_id, sort by latest poll
+        Poll.find({}, { '_id': 0, pid: 0, owner_id: 0, voter_id: 0}, {sort: {'_id': -1}}, function (err, polls) {
+            if (err) throw err;
+            //console.log(polls);
+            res.json(polls);
+        });
+    });
     
+    app.get('/api/poll/:id', function (req, res) {
+         //console.log(req.params.id, "PID");
+         if(req.params.id > 0 ) {         
+            // Find poll by id
+            Poll.find({pid:req.params.id}, {'_id': 0, voter_id: 0}, function (err, polls) {
+                if (err) throw err;                
+                if (Object.keys(polls).length > 0) { // poll object is not empty
+                    return res.json(polls);
+                } else {
+                    var response = {'Poll not found': 0};
+                    res.json(response);
+                }
+            });
+         } else {
+             var response = {'Poll not found': 0};
+             res.json(response);
+         }
+    });
 
+    
+    
+    
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
