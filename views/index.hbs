@@ -1,17 +1,6 @@
 <title>VOTE - create polls and vote</title>
-
-<nav>
-    <div class="navbar navbar-toggleable-md navbar-light">
-        <ul id="navbar-nav">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="/profile">Profile</a></li>
-            <li class="nav-item"><a href="/polls">Polls</a></li>
-        </ul>
-    </div>
-</nav>
-
+{{> nav }}
 <h2>Vote</h2>
-
 <form action="/login">
     <input type="submit" class="btn" value="Login">
 </form>
@@ -19,4 +8,3 @@
 <form action="/signup">
     <input type="submit" class="btn" value="Sign Up">
 </form>
-

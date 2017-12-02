@@ -117,7 +117,7 @@ module.exports = function (app, passport) {
                 console.log(req.form.errors);
                 return res.redirect('/profile/poll');
             }
-            console.log("Req BODY: ", req.body);
+            //console.log("Req BODY: ", req.body);
             var option1 = req.body.option1;
             var option2 = req.body.option2;
             var pollOptions = {};
@@ -129,7 +129,7 @@ module.exports = function (app, passport) {
                 question: req.body.question,
                 options: [pollOptions]
             });
-            console.log(newPoll)
+            //console.log(newPoll)
             newPoll.save(function (err, poll) {
                 console.log("save new poll");
                 if (err) throw err;
@@ -227,7 +227,7 @@ module.exports = function (app, passport) {
                         Poll.remove({
                             pid: req.params.id
                         }, function (err) {
-                            if (err) return handleError(err);
+                            if (err) return err;
                             var response = {
                                 'deleted': 1
                             };

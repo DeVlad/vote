@@ -1,13 +1,4 @@
-<nav>
-    <div class="navbar navbar-toggleable-md navbar-light">
-        <ul id="navbar-nav">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="/profile">Profile</a></li>
-            <li class="nav-item"><a href="/logout">Logout</a></li>
-            <li class="nav-item"><a href="/profile/poll">My Polls</a></li>
-        </ul>
-    </div>
-</nav>
+{{> profile-nav }}
 
 <h2>Wellcome to your profile {{user.firstName}}</h2>
 
@@ -21,16 +12,16 @@
             </div>
         </div>
         <div class="row">
-        <div class="form-group col col-sm-12 col-md-4">
-            <input type="text" name="option1" class="option form-control" value="Option 1" required aria-required="true">
-            <label for="option1">Option 1</label>
-        </div>
+            <div class="form-group col col-sm-12 col-md-4">
+                <input type="text" name="option1" class="option form-control" value="Option 1" required aria-required="true">
+                <label for="option1">Option 1</label>
+            </div>
         </div>
         <div class="row">
-        <div class="form-group col col-sm-12 col-md-4">
-            <input type="text" name="option2" class="option form-control" value="Option 2" required aria-required="true">
-            <label for="option2">Option 2</label>
-        </div>
+            <div class="form-group col col-sm-12 col-md-4">
+                <input type="text" name="option2" class="option form-control" value="Option 2" required aria-required="true">
+                <label for="option2">Option 2</label>
+            </div>
         </div>
         <button class="btn" onclick="alert('add')">Add options</button>
 

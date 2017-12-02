@@ -36,7 +36,8 @@ app.use(bodyParser.json());
 // View engine
 app.engine('.hbs', exphbs({
     extname: '.hbs',
-    defaultLayout: 'layout'
+    defaultLayout: 'layout',
+    partialsDir: __dirname + '/views/partials/'
 }));
 app.set('view engine', '.hbs');
 
