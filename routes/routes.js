@@ -91,11 +91,24 @@ module.exports = function (app, passport) {
     });
 
     app.get('/profile/poll', isLoggedIn, function (req, res) {
-
-        res.render('poll', {
-            user: req.user
+        
+        Poll.find({owner_id: req.user.id}, {
+            '_id': 0,
+            pid: 0,
+            owner_id: 0,
+            voter_id: 0
+        }, {
+            sort: {
+                '_id': -1
+            }
+        }, function (err, polls) {
+            if (err) throw err;
+            //console.log(polls);
+            return res.json(polls);
         });
-
+        /*res.render('poll', {
+            user: req.user
+        });*/
 
     });
 
@@ -131,7 +144,7 @@ module.exports = function (app, passport) {
             });
             //console.log(newPoll)
             newPoll.save(function (err, poll) {
-                console.log("save new poll");
+                console.log("save new poll", poll);
                 if (err) throw err;
             });
             res.render('profile', {
@@ -250,10 +263,14 @@ module.exports = function (app, passport) {
         }
     });
 
-
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+    // Return 404 on missing pages
+    app.get('*', function (req, res) {
+        res.status(404).send('Error: 404. Page not found !');
     });
 
 };
