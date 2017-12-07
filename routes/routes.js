@@ -91,10 +91,11 @@ module.exports = function (app, passport) {
     });
 
     app.get('/profile/poll', isLoggedIn, function (req, res) {
-        
-        Poll.find({owner_id: req.user.id}, {
-            '_id': 0,
-            pid: 0,
+
+        Poll.find({
+            owner_id: req.user.id
+        }, {
+            '_id': 0,            
             owner_id: 0,
             voter_id: 0
         }, {
@@ -102,13 +103,14 @@ module.exports = function (app, passport) {
                 '_id': -1
             }
         }, function (err, polls) {
-            if (err) throw err;
-            //console.log(polls);
-            return res.json(polls);
+            if (err) throw err;            
+            //return res.json(polls);            
+            res.render('poll', {
+                user: req.user,
+                poll: polls
+            });
         });
-        /*res.render('poll', {
-            user: req.user
-        });*/
+
 
     });
 
@@ -140,7 +142,7 @@ module.exports = function (app, passport) {
             var newPoll = new Poll({
                 owner_id: req.user.id,
                 question: req.body.question,
-                options: [pollOptions]
+                options: pollOptions
             });
             //console.log(newPoll)
             newPoll.save(function (err, poll) {

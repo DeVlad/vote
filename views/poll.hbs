@@ -1,13 +1,69 @@
-{{> profile-nav }}
-<h2>My Polls</h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
-<div class="row">
-    <div class="polls"></div>
-    
-</div>
+{{>profile-nav}}
 
-
+<h2>My Posted Polls</h2>
 
 {{#if message}}
 <div class="alert">{{message}}</div>
 {{/if}}
+
+<div class="row">
+    <div class="polls">
+        {{#each poll}}
+        <dl class="list-group">            
+            <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
+            <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
+            {{/each}}
+        </dl>
+        <canvas id="{{pid}}" width="100" height="100"></canvas>
+        
+        {{/each}}
+    </div>
+</div>
+
+<script>
+    
+new Chart(document.getElementById("22"), {
+    type: 'doughnut',
+    data: {
+      labels: ["Option 1", "Option 2"],
+      datasets: [
+        {
+          label: "Poll Title",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: [12,5]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Chart text'
+      }
+    }
+});
+    
+new Chart(document.getElementById("21"), {
+    type: 'doughnut',
+    data: {
+      labels: ["Option 1", "Option 2"],
+      datasets: [
+        {
+          label: "Poll Title",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: [12,5]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Chart text'
+      }
+    }
+});
+
+
+
+</script>

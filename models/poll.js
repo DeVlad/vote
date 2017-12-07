@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 var PollSchema = new Schema({
     owner_id: Number,  
     question: String,
-    options: [],
+    options: {},
     voter_id: [Number]
 }, {
     //timestamps: true,
