@@ -8,62 +8,65 @@
 <div class="alert">{{message}}</div>
 {{/if}}
 
+<script>
+    var pollOptions = [];
+    var pollVotes = [];
+
+    function getChartData(option, votes) {        
+        pollOptions.push(option);
+        pollVotes.push(votes);
+    }
+    
+    function showPollData() {
+        console.log(pollOptions, pollVotes);
+    }
+    
+    function clearPollData() {
+        pollOptions = [];
+        pollVotes = [];
+    }
+</script>
+
 <div class="row">
     <div class="polls">
         {{#each poll}}
-        <dl class="list-group">            
+        <canvas id="chart{{pid}}" width="100" height="100"></canvas>
+        <dl id="{{pid}}" class="list-group">
             <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
             <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
+            <script>
+                var a = '{{this}}'
+                var b = '{{@key}}'
+                getChartData(a,b);
+            </script>
             {{/each}}
         </dl>
-        <canvas id="{{pid}}" width="100" height="100"></canvas>
-        
+
+        <script>
+            showPollData();
+            
+            new Chart(document.getElementById("chart{{pid}}"), {
+                type: 'doughnut',
+                data: {
+                    labels: ["Option 1", "Option 2"],
+                    datasets: [{
+                        label: "label",
+                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                        data: [12, 5]
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: '{{question}}'
+                    }
+                }
+            });
+                      
+            clearPollData();
+        </script>
+
         {{/each}}
+
     </div>
 </div>
-
-<script>
-    
-new Chart(document.getElementById("22"), {
-    type: 'doughnut',
-    data: {
-      labels: ["Option 1", "Option 2"],
-      datasets: [
-        {
-          label: "Poll Title",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: [12,5]
-        }
-      ]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Chart text'
-      }
-    }
-});
-    
-new Chart(document.getElementById("21"), {
-    type: 'doughnut',
-    data: {
-      labels: ["Option 1", "Option 2"],
-      datasets: [
-        {
-          label: "Poll Title",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: [12,5]
-        }
-      ]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Chart text'
-      }
-    }
-});
-
-
-
-</script>

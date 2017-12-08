@@ -2,19 +2,15 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
-
 var User = require('../models/user');
-
 
 module.exports = function (passport) {
 
     passport.serializeUser(function (user, done) {
-        //console.log('serialize ', user);
         done(null, user._id);
     });
 
     passport.deserializeUser(function (_id, done) {
-        //console.log('deserialize ', _id);
         User.findById(_id, function (err, user) {
             done(err, user);
         });
@@ -26,7 +22,7 @@ module.exports = function (passport) {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            console.log("find user email in db: ", email);
+            //console.log("find user email in db: ", email);
             // if the user trying to login already exists
             User.findOne({
                 'email': email
@@ -42,18 +38,17 @@ module.exports = function (passport) {
                 } else {
                     // no user with that email               
                     // create the user
-                   /* var newUser = new User({
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
-                        email: email,
-                        password: bcrypt.hashSync(password, null, null)                       
-                    });*/
-                     newUser = new User();
-                     newUser.firstName = req.body.firstName;
-                     newUser.lastName = req.body.lastName;
-                     newUser.email = email;
-                     newUser.password = bcrypt.hashSync(password, null, null);
-
+                    /* var newUser = new User({
+                         firstName: req.body.firstName,
+                         lastName: req.body.lastName,
+                         email: email,
+                         password: bcrypt.hashSync(password, null, null)                       
+                     });*/
+                    newUser = new User();
+                    newUser.firstName = req.body.firstName;
+                    newUser.lastName = req.body.lastName;
+                    newUser.email = email;
+                    newUser.password = bcrypt.hashSync(password, null, null);
                     //console.log(newUser);
 
                     // save the user
@@ -63,9 +58,7 @@ module.exports = function (passport) {
                         return done(null, newUser);
                     });
                 }
-
             });
-
         }));
 
     passport.use('local-login', new LocalStrategy({
@@ -80,19 +73,15 @@ module.exports = function (passport) {
                 // if there are any errors, return the error
                 if (err)
                     return done(err);
-
                 // if no user is found
                 if (!user)
                     return done(null, false, req.flash('loginMessage', 'User not found !'));
                 // user is found but the password is wrong
-
                 if (!bcrypt.compareSync(password, user.password)) {
                     return done(null, false, req.flash('loginMessage', 'Wrong password !'));
                 }
                 // return successful user
                 return done(null, user);
             });
-
         }));
-
 };
