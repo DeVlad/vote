@@ -12,19 +12,39 @@
     var pollOptions = [];
     var pollVotes = [];
 
-    function getChartData(option, votes) {        
+    function collectChartData(option, votes) {
         pollOptions.push(option);
         pollVotes.push(votes);
     }
-    
-    function showPollData() {
-        console.log(pollOptions, pollVotes);
-    }
-    
+
     function clearPollData() {
         pollOptions = [];
         pollVotes = [];
     }
+
+    function pollData() {
+        var poll = {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "label",
+                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                    data: []
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: ''
+                }
+            }
+        };
+        poll.data.labels = pollOptions;
+        poll.data.datasets[0].data = pollVotes;
+        return poll;
+    }
+
 </script>
 
 <div class="row">
@@ -35,35 +55,19 @@
             <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
             <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
             <script>
-                var a = '{{this}}'
-                var b = '{{@key}}'
-                getChartData(a,b);
+                var votes = '{{this}}';
+                var option = '{{@key}}';
+                collectChartData(option, votes);
+
             </script>
             {{/each}}
         </dl>
 
         <script>
-            showPollData();
-            
-            new Chart(document.getElementById("chart{{pid}}"), {
-                type: 'doughnut',
-                data: {
-                    labels: ["Option 1", "Option 2"],
-                    datasets: [{
-                        label: "label",
-                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                        data: [12, 5]
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: '{{question}}'
-                    }
-                }
-            });
-                      
+            //showPollData();
+            new Chart(document.getElementById("chart{{pid}}"), pollData());
             clearPollData();
+
         </script>
 
         {{/each}}
