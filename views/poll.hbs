@@ -47,9 +47,10 @@
 
 </script>
 
-<div class="row">
-    <div class="polls">
+<div class="row display-flex">
+    
         {{#each poll}}
+        <div class="col-sm-4">
         <canvas id="chart{{pid}}" width="100" height="100"></canvas>
         <dl id="{{pid}}" class="list-group">
             <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
@@ -62,15 +63,15 @@
             </script>
             {{/each}}
         </dl>
+        </div>
+        
 
         <script>
-            //showPollData();
             new Chart(document.getElementById("chart{{pid}}"), pollData());
             clearPollData();
 
         </script>
-
+            
         {{/each}}
-
-    </div>
+    
 </div>

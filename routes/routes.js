@@ -91,7 +91,6 @@ module.exports = function (app, passport) {
     });
 
     app.get('/profile/poll', isLoggedIn, function (req, res) {
-
         Poll.find({
             owner_id: req.user.id
         }, {
@@ -110,8 +109,6 @@ module.exports = function (app, passport) {
                 poll: polls
             });
         });
-
-
     });
 
     // Create new poll
