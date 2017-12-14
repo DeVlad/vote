@@ -1,12 +1,74 @@
-{{> nav }}
+{{>nav}}
 
 <h2>Public Polls</h2>
 
-<div class="row">
-    <div class="polls"></div>
+<script>
+    var pollOptions = [];
+    var pollVotes = [];
+
+    function collectChartData(option, votes) {
+        pollOptions.push(option);
+        pollVotes.push(votes);
+    }
+
+    function clearPollData() {
+        pollOptions = [];
+        pollVotes = [];
+    }
+
+    function pollData() {
+        var poll = {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "label",
+                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                    data: []
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: ''
+                }
+            }
+        };
+        poll.data.labels = pollOptions;
+        poll.data.datasets[0].data = pollVotes;
+        return poll;
+    }
+
+</script>
+
+<div class="row display-flex">
+    
+        {{#each poll}}
+        <div class="col-sm-4">
+        <canvas id="chart{{pid}}" width="100" height="100"></canvas>
+        <dl id="{{pid}}" class="list-group">
+            <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
+            <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
+            <script>
+                var votes = '{{this}}';
+                var option = '{{@key}}';
+                collectChartData(option, votes);
+
+            </script>
+            {{/each}}
+        </dl>
+        </div>
+        
+
+        <script>
+            new Chart(document.getElementById("chart{{pid}}"), pollData());
+            clearPollData();
+
+        </script>
+            
+        {{/each}}
     
 </div>
-
 
 
 {{#if message}}

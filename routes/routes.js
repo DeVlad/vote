@@ -94,7 +94,7 @@ module.exports = function (app, passport) {
         Poll.find({
             owner_id: req.user.id
         }, {
-            '_id': 0,            
+            '_id': 0,
             owner_id: 0,
             voter_id: 0
         }, {
@@ -102,7 +102,7 @@ module.exports = function (app, passport) {
                 '_id': -1
             }
         }, function (err, polls) {
-            if (err) throw err;            
+            if (err) throw err;
             //return res.json(polls);            
             res.render('poll', {
                 user: req.user,
@@ -143,7 +143,7 @@ module.exports = function (app, passport) {
             });
             //console.log(newPoll)
             newPoll.save(function (err, poll) {
-                console.log("save new poll", poll);
+                //console.log("save new poll", poll);
                 if (err) throw err;
             });
             res.render('profile', {
@@ -154,11 +154,23 @@ module.exports = function (app, passport) {
 
     // Public polls
     app.get('/polls', function (req, res) {
-        res.render('polls', {
-            user: req.user
+        Poll.find({}, {
+            '_id': 0,
+            owner_id: 0,
+            voter_id: 0
+        }, {
+            sort: {
+                '_id': -1
+            }
+        }, function (err, polls) {
+            if (err) throw err;
+            //return res.json(polls);            
+            res.render('poll', {
+                user: req.user,
+                poll: polls
+            });
         });
     });
-
 
     // API routes
 
