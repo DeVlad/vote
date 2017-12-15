@@ -1,6 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-
-{{>profile-nav}}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> {{>profile-nav}}
 
 <h2>My Posted Polls</h2>
 
@@ -48,12 +47,12 @@
 </script>
 
 <div class="row display-flex">
-    
-        {{#each poll}}
-        <div class="col-sm-4">
+
+    {{#each poll}}
+    <div id="container{{pid}}" class="col-sm-4">
         <canvas id="chart{{pid}}" width="100" height="100"></canvas>
         <dl id="{{pid}}" class="list-group">
-            <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
+            <dt>pid: {{pid}}  {{question}} <button class="btn btn-danger pull-right" onclick="deletePoll({{pid}})" method="delete"><i class="fa fa-times"></i></button><div class="clearfix"></div></dt> {{#each options }}
             <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
             <script>
                 var votes = '{{this}}';
@@ -63,15 +62,30 @@
             </script>
             {{/each}}
         </dl>
-        </div>
-        
+    </div>
 
-        <script>
-            new Chart(document.getElementById("chart{{pid}}"), pollData());
-            clearPollData();
 
-        </script>
-            
-        {{/each}}
-    
+    <script>
+        new Chart(document.getElementById("chart{{pid}}"), pollData());
+        clearPollData();
+
+    </script>
+
+    {{/each}}
+
+
 </div>
+
+<script>
+    function deletePoll(pid) {
+        var containerId = '#container' + pid;
+        $.ajax({
+            url: '/api/poll/' + pid,
+            type: 'DELETE',
+            success: function(result) {
+                $(containerId).remove();
+            }
+        });
+    }
+
+</script>
