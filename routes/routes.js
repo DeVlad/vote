@@ -172,6 +172,63 @@ module.exports = function (app, passport) {
         });
     });
 
+    // GET poll by id
+    app.get('/poll/:id', function (req, res) {
+        //console.log(req.params.id, "PID");
+        if (req.params.id > 0) {
+            // Find poll by id
+            Poll.find({
+                pid: req.params.id
+            }, {
+                '_id': 0,
+                voter_id: 0
+            }, function (err, polls) {
+                if (err) throw err;
+                if (Object.keys(polls).length > 0) { // poll object is not empty
+                    return res.render('poll', {
+                        user: req.user,
+                        poll: polls
+                    });
+                } else {
+                    res.render('404', {
+                        user: req.user
+                    });
+                }
+            });
+        } else {            
+            res.render('404');
+        }
+    });
+
+    // GET poll by id
+    app.get('/api/poll/:id', function (req, res) {
+        //console.log(req.params.id, "PID");
+        if (req.params.id > 0) {
+            // Find poll by id
+            Poll.find({
+                pid: req.params.id
+            }, {
+                '_id': 0,
+                voter_id: 0
+            }, function (err, polls) {
+                if (err) throw err;
+                if (Object.keys(polls).length > 0) { // poll object is not empty
+                    return res.json(polls);
+                } else {
+                    var response = {
+                        'not found': 0
+                    };
+                    res.json(response);
+                }
+            });
+        } else {
+            var response = {
+                'not found': 0
+            };
+            res.json(response);
+        }
+    });
+
     // API routes
 
     app.get('/api', function (req, res) {
@@ -230,7 +287,7 @@ module.exports = function (app, passport) {
 
     // DELETE poll by id
     // Todo check if user is logged
-    app.delete('/api/poll/:id', function (req, res) {
+    app.delete('/api/poll/:id', isLoggedIn, function (req, res) {
         // TODO check if user is owner of the poll
         //console.log(req.user, "USER");
         var testOwnerId = 6;
@@ -295,3 +352,7 @@ function isLoggedIn(req, res, next) {
     // if user is not logged redirect to home page
     res.redirect('/');
 }
+
+// TODO is poll owner policy
+
+
