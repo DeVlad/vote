@@ -1,6 +1,7 @@
-{{>nav}}
-
-<h2>Public Polls</h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> {{>profile-nav}} {{#if message}}
+<div class="alert">{{message}}</div>
+{{/if}}
 
 <script>
     var pollOptions = [];
@@ -40,14 +41,15 @@
     }
 
 </script>
-
 <div class="row display-flex">
 
     {{#each poll}}
-    <div class="col-sm-4">
+
+    <div id="container{{pid}}" class="col- col-sm-6 col-md-4">
+        <h2>{{question}}</h2>
         <canvas id="chart{{pid}}" width="100" height="100"></canvas>
         <dl id="{{pid}}" class="list-group">
-            <dt>pid: {{pid}}  {{question}}</dt> {{#each options }}
+            <dt>pid: {{pid}}  {{question}} <div class="clearfix"></div></dt> {{#each options }}
             <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
             <script>
                 var votes = '{{this}}';
@@ -58,16 +60,13 @@
             {{/each}}
         </dl>
     </div>
-
     <script>
         new Chart(document.getElementById("chart{{pid}}"), pollData());
         clearPollData();
 
     </script>
+
     {{/each}}
+
+
 </div>
-
-
-{{#if message}}
-<div class="alert">{{message}}</div>
-{{/if}}

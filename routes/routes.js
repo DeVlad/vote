@@ -184,10 +184,10 @@ module.exports = function (app, passport) {
                 voter_id: 0
             }, function (err, polls) {
                 if (err) throw err;
-                if (Object.keys(polls).length > 0) { // poll object is not empty
-                    return res.render('poll', {
+                if (Object.keys(polls).length > 0) { // poll object is not empty                    
+                    return res.render('public-poll', {
                         user: req.user,
-                        poll: polls
+                        poll: polls                        
                     });
                 } else {
                     res.render('404', {
