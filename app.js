@@ -10,19 +10,49 @@ var exphbs = require('express-handlebars');
 var flash = require('connect-flash');
 var mongoose = require('mongoose');
 
-// Database
-var uri = 'mongodb://localhost/vote';
-var options = {
-    useMongoClient: true,   
-};
+// App config
+var config = require('./config/config');
 
-mongoose.connect(uri, options, function(error) {
-    if(!error) {        
-        console.log('Database connection established');        
-    }
+// Database
+var db = mongoose.connection;
+var uri = config.database;
+var options = {
+    autoReconnect: true,
+    keepAlive: 1,
+    connectTimeoutMS: 30000
+};
+var dbName = uri.slice(uri.lastIndexOf('/') + 1); // Do not expose db password to console
+
+db.on('connecting', function () {
+    console.log('Connecting to database:', dbName);
 });
 
+db.on('connected', function () {
+    console.log('Database connection established.');
+});
 
+db.on('error', function () {
+    console.log('Database connection failed!');
+    mongoose.disconnect();
+});
+
+db.on('disconnected', function () {
+    console.log('Disconnected from:', uri);
+    mongoose.connect(uri, options).catch(function () {
+        console.error('Error establishing a database connection! \nPlease check your database service.');
+    });
+});
+
+db.on('reconnected', function () {
+    console.log('Reconnected to database.');
+});
+
+mongoose.connect(uri, options).catch(function () {
+    console.error('Error starting application!');
+    process.exit(1);
+});
+
+// Passport Auth
 require('./config/passport')(passport);
 
 // Read cookies
@@ -73,5 +103,8 @@ app.use(function (err, req, res, next) {
         // More errors...
     }
 });
+
+// Turn off Express header
+app.disable('x-powered-by');
 
 app.listen(port, console.log('Listening on port:', port));

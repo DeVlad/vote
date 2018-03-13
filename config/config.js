@@ -1,5 +1,6 @@
 // Configuration
 
 module.exports = {
-    baseUrl: "http://localhost:8000/",    
+    database: "mongodb://localhost/vote",
+    secret: "Session.Secret.Change.It.To.Something.Secure!"
 };

@@ -165,7 +165,7 @@ module.exports = function (app, passport) {
         }, function (err, polls) {
             if (err) throw err;
             //return res.json(polls);            
-            res.render('poll', {
+            res.render('public-polls', {
                 user: req.user,
                 poll: polls
             });
