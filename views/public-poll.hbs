@@ -46,10 +46,10 @@
     {{#each poll}}
 
     <div id="container{{pid}}" class="col- col-sm-6 col-md-4">
-        <h2>{{question}}</h2>
+        <p><strong>{{question}}</strong></p>
         <canvas id="chart{{pid}}" width="100" height="100"></canvas>
         <dl id="{{pid}}" class="list-group">
-            <dt>pid: {{pid}}  {{question}} <div class="clearfix"></div></dt> {{#each options }}
+            <dt>pid: {{pid}} <div class="clearfix"></div></dt> {{#each options }}
             <dd class="list-group-item"><span class="badge">{{this}}</span>{{@key}}</dd>
             <script>
                 var votes = '{{this}}';

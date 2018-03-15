@@ -73,7 +73,7 @@ app.set('view engine', '.hbs');
 
 // Required for passport
 app.use(session({
-    secret: 'ItsVerySecret.ChangeAndStoreItInEnvVariableInProduction!',
+    secret: config.secret,
     resave: true,
     saveUninitialized: true
 }));
