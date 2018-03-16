@@ -2,8 +2,8 @@
 <h2>Wellcome to your profile {{user.firstName}}</h2>
 <div class="row">
     <h1>Create poll</h1>
-    <form action="/profile/poll" method="post">
-        
+    <form id="create-poll" action="/profile/poll" method="post">
+
         <div class="row">
             <div class="form-group col col-sm-12 col-md-4">
                 <input type="text" name="question" id="question" placeholder="Question" class="form-control" minlength="2" maxlength="40" required aria-required="true">
@@ -11,22 +11,24 @@
         </div>
         <button class="btn btn-default add_field_button">Add option</button><input type="submit" id="login-btn" class="btn btn-success" onclick="" value="Submit Poll"><br>
         <div class="input_fields_wrap">
-        <div class="row">
-            <div class="form-group col col-sm-12 col-md-4">
-                <input type="text" name="option1" class="option form-control" placeholder="Option 1" minlength="1" maxlength="35" required aria-required="true">
+            <div class="row">
+                <div class="form-group col col-sm-12 col-md-4">
+                    <input type="text" name="option1" class="option form-control" placeholder="Option 1" minlength="1" maxlength="35" required aria-required="true">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="form-group col col-sm-12 col-md-4">
-                <input type="text" name="option2" class="option form-control" placeholder="Option 2" minlength="1" maxlength="35" required aria-required="true">
+            <div class="row">
+                <div class="form-group col col-sm-12 col-md-4">
+                    <input type="text" name="option2" class="option form-control" placeholder="Option 2" minlength="1" maxlength="35" required aria-required="true">
+                </div>
             </div>
-        </div>        
-        
+
         </div>
     </form>
 </div>
 
-{{#if message}}
+<div class="row">
+    <div class="col-md-4 col-md-offset-4" id="status-message"></div>
+</div><br> {{#if message}}
 <div class="alert">{{message}}</div>
 {{/if}}
 
@@ -36,13 +38,13 @@
         var wrapper = $(".input_fields_wrap"); // Fields wrapper
         var add_button = $(".add_field_button"); // Add button ID
         var boxCount = 2; // Initlal text box count
-        
+
         $(add_button).click(function(e) {
             e.preventDefault();
-            
+
             if (boxCount < max_fields) { // Maximum allowed input boxes 
                 boxCount++;
-                var htmlInputBox = '<div class="row"><div class="form-group col col-sm-12 col-md-4"><input type="text" name="option'+ boxCount +'" class="option form-control" placeholder="Option '+ boxCount +'"minlength="1" maxlength="35" required aria-required="true"/><a href="#" class="remove_field"><button class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i></button></a></div></div>'
+                var htmlInputBox = '<div class="row"><div class="form-group col col-sm-12 col-md-4"><input type="text" name="option' + boxCount + '" class="option form-control" placeholder="Option ' + boxCount + '"minlength="1" maxlength="35" required aria-required="true"/><a href="#" class="remove_field"><button class="btn btn-danger"><i class="fa fa-minus" aria-hidden="true"></i></button></a></div></div>';
                 $(wrapper).append(htmlInputBox);
             }
         });
@@ -52,6 +54,43 @@
             $(this).parent('div').remove();
             x--;
         })
+    });
+
+</script>
+
+<script>
+    function displayStatusMessage(message) {
+        console.log("STATUS:", message);
+        $("#status-message").text(message).fadeTo(4000, 500).slideUp(500, function() {
+            $("#status-message").slideUp(500);
+        });
+    }
+
+    // TODO: filter some symbols in input like '=&'
+    $("#create-poll").on("submit", function(event) {
+        event.preventDefault();
+
+        var url = window.location.origin + '/profile/poll';
+        var values = $(this).serialize();
+        var form = values.split('&');
+        var jsonData = {};
+
+        for (var field = 0; field < form.length; field++) {
+            var split = form[field].split('=');
+            jsonData[split[0]] = decodeURIComponent(split[1]);
+        }
+
+        var send = $.post(url, jsonData);
+
+        send.done(function(result) {
+            displayStatusMessage(result.message);
+            console.log('POST: success', result);
+        });
+
+        send.fail(function(data) {
+            displayStatusMessage(result.message);
+            console.log('POST: failed', result);
+        });
     });
 
 </script>

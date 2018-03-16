@@ -112,45 +112,55 @@ module.exports = function (app, passport) {
     });
 
     // Create new poll
-    app.post('/profile/poll', isLoggedIn,
-        form(
-            field("question").trim().required(),
-            field("option1").trim().required(),
-            field("option2").trim().required()
-        ),
-        // TODO: dynamic input verification
-
-        function (req, res) {
-            //console.log("POST Poll: user id", req.user);
-
-            // TODO: verify options must be unique 
-            if (!req.form.isValid) {
-                // Handle errors 
-                console.log(req.form.errors);
-                return res.redirect('/profile/poll');
-            }
-            //console.log("Req BODY: ", req.body);
-            var option1 = req.body.option1;
-            var option2 = req.body.option2;
-            var pollOptions = {};
-            pollOptions[option1] = 0;
-            pollOptions[option2] = 0;
-
-            var newPoll = new Poll({
-                owner_id: req.user.id,
-                question: req.body.question,
-                options: pollOptions
-            });
-            //console.log(newPoll)
-            newPoll.save(function (err, poll) {
-                //console.log("save new poll", poll);
-                if (err) throw err;
-            });
-            res.render('profile', {
-                user: req.user
-            });
+    app.post('/profile/poll', isLoggedIn, function (req, res) {
+        console.log("POST Poll:", req.body);
+        // TODO: input verification
+        // TODO: verify poll title must be unique
+        var jsonResponse = {
+            poll: false,
+            message: "Error! Poll not created."
+        };
+        
+        if (req.body.options < 1) {
+            console.log('Poll tittle is too short');
+            jsonResponse.message = 'Poll tittle is too short';
+            return res.send(jsonResponse);
         }
-    );
+        	
+        var question = req.body.question;
+        var options = req.body;        
+        var pollOptions = {};
+        
+        delete options.question;
+        
+        for (var prop in options) {
+            console.log(prop, options[prop]);
+            var value = options[prop];
+            pollOptions[value] = 0;
+        }
+        console.log(pollOptions);
+        
+        var newPoll = new Poll({
+            owner_id: req.user.id,
+            question: question,
+            options: pollOptions
+        });
+
+        newPoll.save(function (err, poll) {
+            //console.log("save new poll", poll);                
+            if (err) {
+                res.send(jsonResponse);
+                throw err;
+            }
+        });
+
+        var jsonResponse = {
+            poll: true,
+            message: "Poll created." //TODO: send poll url
+        };
+
+        res.send(jsonResponse);
+    });
 
     // Public polls
     app.get('/polls', function (req, res) {
@@ -187,7 +197,7 @@ module.exports = function (app, passport) {
                 if (Object.keys(polls).length > 0) { // poll object is not empty                    
                     return res.render('public-poll', {
                         user: req.user,
-                        poll: polls                        
+                        poll: polls
                     });
                 } else {
                     res.render('404', {
@@ -195,7 +205,7 @@ module.exports = function (app, passport) {
                     });
                 }
             });
-        } else {            
+        } else {
             res.render('404');
         }
     });
@@ -354,5 +364,3 @@ function isLoggedIn(req, res, next) {
 }
 
 // TODO is poll owner policy
-
-
