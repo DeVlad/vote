@@ -4,9 +4,23 @@
             <a class="navbar-brand" href="#">Vote!</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="/profile">Profile</a></li>
+            <li class="nav-item"><a href="/">Home</a></li>            
             <li class="nav-item"><a href="/polls">Polls</a></li>
+            {{#if user}}
+            <li class="nav-item"><a href="/profile">Profile</a></li>
+            {{/if}}
+        </ul>        
+        {{#if user}}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item float-right"><a href="/profile"><span class="glyphicon glyphicon-user"></span> {{user.firstName}} </a></li>
+            <li class="nav-item float-right"><a href="/logout">Logout</a></li>
         </ul>
+        {{/if}}        
+        {{#unless user}}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item float-right"><a href="/login">Login</a></li>
+            <li class="nav-item float-right"><a href="/signup">Signup</a></li>
+        </ul>
+        {{/unless}}
     </div>
 </nav>

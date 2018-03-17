@@ -120,26 +120,26 @@ module.exports = function (app, passport) {
             poll: false,
             message: "Error! Poll not created."
         };
-        
+
         if (req.body.options < 1) {
             console.log('Poll tittle is too short');
             jsonResponse.message = 'Poll tittle is too short';
             return res.send(jsonResponse);
         }
-        	
+
         var question = req.body.question;
-        var options = req.body;        
+        var options = req.body;
         var pollOptions = {};
-        
+
         delete options.question;
-        
+
         for (var prop in options) {
             console.log(prop, options[prop]);
             var value = options[prop];
             pollOptions[value] = 0;
         }
         console.log(pollOptions);
-        
+
         var newPoll = new Poll({
             owner_id: req.user.id,
             question: question,
