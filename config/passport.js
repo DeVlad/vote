@@ -22,39 +22,28 @@ module.exports = function (passport) {
             passReqToCallback: true
         },
         function (req, email, password, done) {
-            //console.log("find user email in db: ", email);
-            // if the user trying to login already exists
+            // If the user trying to login already exists
             User.findOne({
                 'email': email
             }, function (err, user) {
-                // if there are any errors, return the error
-                //console.log("Find bt email: ", user);
-                if (err)
+                // If there are any errors, return the error            
+                if (err) {
                     return done(err);
-
-                // already a user with that email
+                }
+                // Already a user with that email
                 if (user) {
                     return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
                 } else {
-                    // no user with that email               
-                    // create the user
-                    /* var newUser = new User({
-                         firstName: req.body.firstName,
-                         lastName: req.body.lastName,
-                         email: email,
-                         password: bcrypt.hashSync(password, null, null)                       
-                     });*/
+                    // No user with that email create new user 
                     newUser = new User();
                     newUser.firstName = req.body.firstName;
                     newUser.lastName = req.body.lastName;
                     newUser.email = email;
-                    newUser.password = bcrypt.hashSync(password, null, null);
-                    //console.log(newUser);
-
-                    // save the user
+                    newUser.password = bcrypt.hashSync(password, null, null);                    
                     newUser.save(function (err) {
-                        if (err)
-                            throw err;
+                        if (err) {
+                             throw err;
+                        }                           
                         return done(null, newUser);
                     });
                 }
@@ -70,17 +59,19 @@ module.exports = function (passport) {
             User.findOne({
                 'email': email
             }, function (err, user) {
-                // if there are any errors, return the error
-                if (err)
+                // If there are any errors, return the error
+                if (err) {
                     return done(err);
-                // if no user is found
-                if (!user)
-                    return done(null, false, req.flash('loginMessage', 'User not found !'));
-                // user is found but the password is wrong
+                }
+                // User not found
+                if (!user) {
+                     return done(null, false, req.flash('loginMessage', 'User not found !'));
+                }                   
+                // User is found but the password is wrong
                 if (!bcrypt.compareSync(password, user.password)) {
                     return done(null, false, req.flash('loginMessage', 'Wrong password !'));
                 }
-                // return successful user
+                // Return successful user
                 return done(null, user);
             });
         }));
